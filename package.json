@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "rollup --config rollup.config.ts --configPlugin typescript",
-        "disabled:postbuild": "cd quickjs-native && ./build.command ../dist/hello.js"
+        "start": "cd quickjs-native && ./start.command"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^29.0.3",
