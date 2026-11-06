@@ -1,9 +1,21 @@
+import * as os from 'os';
+import { run } from './script';
 import { utf16 } from './utf16';
 
 export function alert(message: string, title?: string): boolean {
-    const user32 = native.dlopen('user32.dll');
+    if ('darwin' === os.platform) {
+        let script = `display dialog "${message}"`;
+        if (undefined !== title) {
+            script += `with title "${title}"`;
+        }
+        script += `default button "OK"`;
 
-    if (0 !== user32 && null !== user32) {
+        return -1 !== (run(script) ?? '').indexOf(':OK');
+    }
+
+    const user32 = native.dlopen('user32.dll') ?? 0;
+
+    if (0 !== user32) {
         const messageBoxW = native.dlsym(user32, 'MessageBoxW');
 
         let result: number | null = 0;
