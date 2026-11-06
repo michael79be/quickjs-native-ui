@@ -6,14 +6,15 @@ export function alert(message: string, title?: string): boolean {
     if (0 !== user32 && null !== user32) {
         const messageBoxW = native.dlsym(user32, 'MessageBoxW');
 
+        let result: number | null = 0;
+
         if (messageBoxW) {
-            const result = native.invoke(messageBoxW, [0, utf16(`${message}\x00`).buffer, utf16(`${title ?? ''}\x00`).buffer, 0]);
-            print(result);
+            result = native.invoke(messageBoxW, [0, utf16(`${message}\x00`).buffer, utf16(`${title ?? ''}\x00`).buffer, 0]);
         }
 
         native.dlclose(user32);
 
-        return true;
+        return 1 === result;
     } else {
         throw new Error('Error loading user32.dll');
     }

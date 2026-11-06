@@ -6,8 +6,8 @@ const imports: { [key: string]: any } = {
 
 Object.keys(imports).forEach((key: string) => {
     if (undefined !== imports[key]) {
-        print(`✅ ${key} is defined`);
+        print(`[OK] ${key} is defined`);
     } else {
-        print(`❌ ${key} is not defined`)
+        print(`[ERR] ${key} is not defined`)
     }
 });

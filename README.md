@@ -4,7 +4,7 @@ Quick JS native ui wrapper to provider cross-platform UI components to Quick JS
 
 ## API
 
-- `alert` : show an alert dialog (message, title), return true is OK is pressed
+- `alert` : show an alert dialog (message, title), return true if OK is pressed
 
 ## Build
 
