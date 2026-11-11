@@ -1,7 +1,8 @@
-import { alert } from './dialogs';
+import { alert, confirm } from './dialogs';
 
 const imports: { [key: string]: any } = {
-    alert: alert
+    alert: alert,
+    confirm: confirm
 };
 
 Object.keys(imports).forEach((key: string) => {
