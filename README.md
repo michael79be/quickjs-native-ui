@@ -33,11 +33,3 @@ npx quickjs-native bundle dist/index.js
 
 Executables for all supported targets are written to `release/` by default.
 Run `npx quickjs-native help` to see the available options.
-
-## Development
-
-```shell
-npm install
-npm run build
-npm pack
-```
