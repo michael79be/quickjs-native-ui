@@ -25,7 +25,7 @@
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-typescript": "^12.3.1",
         "@types/node": "^26.6.6",
-        "quickjs-native": "git+https://github.com/michael79be/quickjs-native.git",
+        "quickjs-native": "git+https://github.com/michael79be/quickjs-native.git#main",
         "rollup": "^4.68.0",
         "tslib": "^2.9.1",
         "typescript": "^6.0.3"
