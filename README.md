@@ -1,23 +1,31 @@
-# quickjs-native-ui
+# quickjs-ui
 
-Quick JS native ui wrapper to provide cross-platform UI components to Quick JS
+Native UI helpers for applications running on QuickJS Native.
 
 ## API
 
-- `alert` : show an alert dialog (message, title), return true if OK is pressed
+- `alert(message, title?)`: show a dialog.
+- `confirm(message, title?)`: show a confirmation dialog and return `true` when OK is pressed.
 
-## Install
+## Install and use
 
 ```shell
-git submodule update --init --force --remote
-cd quickjs-native
-./make.command
-cd ..
+npm install quickjs-ui
 ```
 
-## Package
+```js
+import { alert, confirm } from 'quickjs-ui';
+
+alert('Hello');
+if (confirm('Continue?')) {
+    alert('You selected OK');
+}
+```
+
+## Development
 
 ```shell
-npm run build -- --input src/samples/hello.ts
-npm run start -- hello
+npm install
+npm run build
+npm pack
 ```

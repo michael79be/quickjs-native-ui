@@ -1,6 +1,30 @@
 import * as os from 'os';
 import { run } from './script';
-import { utf16 } from './utf16';
+import { loadLibrary, stringToUtf16Bytes } from 'quickjs-native';
+
+function zenity(args: string[]): number {
+    const status = os.exec(args);
+    if (127 === status) {
+        throw new Error('Unable to run zenity. Install it and ensure it is available on PATH.');
+    }
+
+    return status;
+}
+
+function messageBox(message: string, title: string, type: number): number {
+    const user32 = loadLibrary('user32.dll', { MessageBoxW: 'number' });
+
+    try {
+        return user32.MessageBoxW([
+            0,
+            stringToUtf16Bytes(`${message}\x00`).buffer,
+            stringToUtf16Bytes(`${title}\x00`).buffer,
+            type
+        ]);
+    } finally {
+        user32.destroy();
+    }
+}
 
 export function alert(message: string, title?: string): void {
     if ('darwin' === os.platform) {
@@ -10,21 +34,20 @@ export function alert(message: string, title?: string): void {
         return;
     }
 
-    const user32 = native.dlopen('user32.dll') ?? 0;
-
-    if (0 !== user32) {
-        const messageBoxW = native.dlsym(user32, 'MessageBoxW');
-
-        if (messageBoxW) {
-            native.invoke(messageBoxW, [0, utf16(`${message}\x00`).buffer, utf16(`${title ?? ''}\x00`).buffer, 0]);
+    if ('linux' === os.platform) {
+        const args = ['zenity', '--info', `--text=${message}`];
+        if (undefined !== title) {
+            args.push(`--title=${title}`);
+        }
+        const status = zenity(args);
+        if (0 !== status && 1 !== status) {
+            throw new Error(`zenity info dialog exited with status ${status}.`);
         }
 
-        native.dlclose(user32);
-
         return;
-    } else {
-        throw new Error('Error loading user32.dll');
     }
+
+    messageBox(message, title ?? '', 0);
 }
 
 export function confirm(message: string, title?: string): boolean {
@@ -38,21 +61,21 @@ export function confirm(message: string, title?: string): boolean {
         return -1 !== (run(script) ?? '').indexOf(':OK');
     }
 
-    const user32 = native.dlopen('user32.dll') ?? 0;
-
-    if (0 !== user32) {
-        const messageBoxW = native.dlsym(user32, 'MessageBoxW');
-
-        let result: number | null = 0;
-
-        if (messageBoxW) {
-            result = native.invoke(messageBoxW, [0, utf16(`${message}\x00`).buffer, utf16(`${title ?? ''}\x00`).buffer, 1]);
+    if ('linux' === os.platform) {
+        const args = ['zenity', '--question', `--text=${message}`];
+        if (undefined !== title) {
+            args.push(`--title=${title}`);
+        }
+        const status = zenity(args);
+        if (0 === status) {
+            return true;
+        }
+        if (1 === status) {
+            return false;
         }
 
-        native.dlclose(user32);
-
-        return 1 === result;
-    } else {
-        throw new Error('Error loading user32.dll');
+        throw new Error(`zenity question dialog exited with status ${status}.`);
     }
+
+    return 1 === messageBox(message, title ?? '', 1);
 }

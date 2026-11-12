@@ -9,7 +9,11 @@ import { readAll } from './io';
  */
 export function run(code: string): string | null {
     if ('darwin' === os.platform) {
-        const [tmpRead, tmpWrite] = os.pipe();
+        const pipe = os.pipe();
+        if (!pipe) {
+            return null;
+        }
+        const [tmpRead, tmpWrite] = pipe;
         os.exec(['osascript', '-e', code], {
             stdout: tmpWrite,
             stderr: tmpWrite
@@ -20,7 +24,11 @@ export function run(code: string): string | null {
     }
 
     if ('linux' === os.platform) {
-        const [tmpRead, tmpWrite] = os.pipe();
+        const pipe = os.pipe();
+        if (!pipe) {
+            return null;
+        }
+        const [tmpRead, tmpWrite] = pipe;
         const parts = code.split(' ');
         const exe = parts.shift() ?? 'zenity';
         const cmd = [exe, parts.join(' ')];

@@ -1,13 +1,31 @@
 {
+    "name": "quickjs-ui",
+    "version": "0.1.0",
+    "description": "Native UI helpers for QuickJS Native",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist/index.js",
+        "dist/types"
+    ],
     "scripts": {
-        "build": "rollup --config rollup.config.ts --configPlugin typescript",
-        "start": "cd quickjs-native && ./start.command"
+        "prebuild": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+        "build": "rollup --config rollup.config.ts --configPlugin typescript && tsc --project tsconfig.json --declaration --emitDeclarationOnly --declarationDir dist/types",
+        "prepack": "npm run build"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^29.0.3",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-typescript": "^12.3.1",
         "@types/node": "^26.6.6",
+        "quickjs-native": "git+https://github.com/michael79be/quickjs-native.git",
         "rollup": "^4.68.0",
         "tslib": "^2.9.1",
         "typescript": "^6.0.3"
