@@ -22,6 +22,18 @@ if (confirm('Continue?')) {
 }
 ```
 
+## Create an executable
+
+After compiling your application's entry point to JavaScript, bundle it with
+QuickJS Native:
+
+```shell
+npx quickjs-native bundle dist/index.js
+```
+
+Executables for all supported targets are written to `release/` by default.
+Run `npx quickjs-native help` to see the available options.
+
 ## Development
 
 ```shell
